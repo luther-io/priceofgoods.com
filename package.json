@@ -11,9 +11,9 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.126.0",
     "@astrojs/check": "^0.9.6",
-    "@astrojs/markdoc": "^0.15.10",
+    "@astrojs/markdoc": "^2.0.0",
     "@astrojs/partytown": "^2.1.4",
-    "@astrojs/react": "^4.4.2",
+    "@astrojs/react": "^7.0.0",
     "@astrojs/sitemap": "^3.7.0",
     "@langchain/anthropic": "^0.3.12",
     "@langchain/core": "^0.3.80",
