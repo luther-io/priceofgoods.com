@@ -76,7 +76,7 @@ The site is statically generated into `dist/`; no server adapter is required for
 ### Dependency Security
 
 - `pnpm test` checks dependency compatibility, SDK responses without paid API calls, and SVG rasterization.
-- Renovate retains the shared organization preset, groups compatible npm updates weekly, and refreshes transitive dependencies through lockfile maintenance. Security fixes bypass the weekly schedule and wait for review.
+- Renovate inherits dependency-update and vulnerability-alert policy from the shared organization preset.
 - Use `pnpm-lock.yaml` as the only JavaScript lockfile. The typography parser override in `pnpm-workspace.yaml` can be removed once upstream no longer pins its vulnerable parser.
 
 ## Architecture
