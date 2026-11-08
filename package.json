@@ -20,7 +20,7 @@
     "@astrojs/partytown": "^2.1.9",
     "@astrojs/react": "^7.1.4",
     "@astrojs/sitemap": "^3.7.4",
-    "@langchain/anthropic": "^0.3.12",
+    "@langchain/anthropic": "^1.0.0",
     "@langchain/core": "^0.3.80",
     "@radix-ui/react-separator": "^1.1.1",
     "@tailwindcss/vite": "^4.3.5",
