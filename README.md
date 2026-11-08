@@ -39,7 +39,7 @@ Data is sourced from the [Bureau of Labor Statistics](https://www.bls.gov/) (BLS
 6. Cloudflare Workers - Data fetching
 7. Cloudflare R2 - Data storage/caching
 8. Github - Source control
-9. Anthropic Claude - Price analysis via LangChain
+9. Anthropic Claude - Price analysis via the Anthropic SDK
 
 ## Development
 
@@ -66,11 +66,18 @@ Data is sourced from the [Bureau of Labor Statistics](https://www.bls.gov/) (BLS
 
 ```
 pnpm run check
+pnpm test
 pnpm run build
 pnpm run test:build
 ```
 
 The site is statically generated into `dist/`; no server adapter is required for Cloudflare Pages.
+
+### Dependency Security
+
+- `pnpm test` checks dependency compatibility, SDK responses without paid API calls, and SVG rasterization.
+- Renovate inherits dependency-update and vulnerability-alert policy from the shared organization preset.
+- Use `pnpm-lock.yaml` as the only JavaScript lockfile. The typography parser override in `pnpm-workspace.yaml` can be removed once upstream no longer pins its vulnerable parser.
 
 ## Architecture
 

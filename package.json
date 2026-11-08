@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
+    "test": "node --test tests/dependencies.test.ts",
     "test:build": "node --test tests/build.test.ts",
     "build": "astro build",
     "preview": "astro preview",
@@ -20,25 +21,22 @@
     "@astrojs/partytown": "^2.1.9",
     "@astrojs/react": "^7.1.4",
     "@astrojs/sitemap": "^3.7.4",
-    "@langchain/anthropic": "^0.3.12",
-    "@langchain/core": "^0.3.80",
-    "@radix-ui/react-separator": "^1.1.1",
+    "@radix-ui/react-separator": "^1.2.0",
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.4.7",
-    "langsmith": "^0.6.0",
     "lucide-react": "^0.513.0",
-    "marked": "^15.0.6",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "recharts": "^2.15.0",
-    "remark-gfm": "^4.0.0",
-    "sharp": "^0.34.2",
+    "marked": "^15.0.12",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "recharts": "^2.15.4",
+    "remark-gfm": "^4.0.1",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.5",
-    "typescript": "^5.7.2",
-    "zod": "^3.24.1"
+    "typescript": "^5.9.3",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.16"
+    "@tailwindcss/typography": "^0.5.20"
   },
   "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48"
 }
