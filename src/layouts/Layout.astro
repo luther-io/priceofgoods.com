@@ -12,7 +12,7 @@ const { title, description, ogImage } = Astro.props;
 const siteUrl = "https://priceofgoods.com";
 const fullOgImageUrl = ogImage
   ? `${siteUrl}/og-image/${ogImage.type}/${ogImage.slug}.png`
-  : `${siteUrl}/default-og.png`;
+  : `${siteUrl}/og-image/home/index.png`;
 
 import "../styles/global.css";
 
@@ -27,7 +27,7 @@ import PostHog from "../components/posthog.astro";
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFWES7P3JD"
     ></script>
-    <script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);

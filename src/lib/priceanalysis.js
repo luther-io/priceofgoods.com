@@ -293,9 +293,9 @@ async function fetchAnalysis(prompt, useAnthropic = true) {
 
 /**
  * Analyzes price data for an item using either Anthropic API with web search or Perplexity API
- * @param {Object} item - The item to analyze
+ * @param {import('./types').Good} item - The item to analyze
  * @param {boolean} useAnthropic - Whether to use Anthropic API (true) or Perplexity API (false)
- * @returns {Promise<{data: string, citations: Array, timestamp: number}>} Analysis results
+ * @returns {Promise<import('./types').PriceAnalysis>} Analysis results
  */
 export async function analyzeItemPrices(item, useAnthropic = true) {
   // Only use cache if enabled via environment variable.

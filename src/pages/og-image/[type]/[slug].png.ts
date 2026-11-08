@@ -4,6 +4,13 @@ import sharp from "sharp";
 import { fetchGoodsConfig } from "../../../lib/fetchUtils";
 import { processItemData } from "../../../lib/dataUtils";
 import { slugify } from "../../../lib/stringUtilities";
+import type {
+  Category,
+  Good,
+  GoodsConfig,
+  HistoryEntry,
+  ItemData,
+} from "../../../lib/types";
 
 // Shared styles with consistent sizes
 const styles = {
@@ -25,6 +32,14 @@ const styles = {
 };
 
 // Helper functions
+function escapeSvgText(value: string) {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : String(error);
+}
+
 function createSvgWrapper(content: string, additionalStyles = "") {
   return `
     <svg width="1200" height="600" xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +77,7 @@ function createFooter(type: "home" | "category" | "item", date?: string) {
 }
 
 // Main image generators
-async function generateHomeImage(goodsConfig) {
+async function generateHomeImage(goodsConfig: GoodsConfig) {
   try {
     const highlights = await Promise.all(
       Object.values(goodsConfig.categories).map(async (category) => {
@@ -90,9 +105,9 @@ async function generateHomeImage(goodsConfig) {
     const pricesList = highlights
       .map(
         (highlight, idx) => `
-        <text x="60" y="${200 + idx * 80}" class="category-name">${highlight.category}</text>
+        <text x="60" y="${200 + idx * 80}" class="category-name">${escapeSvgText(highlight.category)}</text>
         <text x="60" y="${230 + idx * 80}" class="price-item">
-          ${highlight.item}: ${highlight.price === "N/A" ? "Data pending BLS updates" : formatPrice(highlight.price)}${formatPriceChange(highlight.change)}
+          ${escapeSvgText(highlight.item)}: ${highlight.price === "N/A" ? "Data pending BLS updates" : formatPrice(highlight.price)}${formatPriceChange(highlight.change)}
         </text>
       `,
       )
@@ -106,11 +121,11 @@ async function generateHomeImage(goodsConfig) {
     `);
   } catch (error) {
     console.error("Error in generateHomeImage:", error);
-    return createErrorSvg(`Unable to load prices overview: ${error.message}`);
+    return createErrorSvg(`Unable to load prices overview: ${errorMessage(error)}`);
   }
 }
 
-async function generateCategoryImage(category) {
+async function generateCategoryImage(category: Category) {
   try {
     const prices = await Promise.all(
       Object.values(category.items).map(async (item) => {
@@ -132,14 +147,14 @@ async function generateCategoryImage(category) {
       .map(
         (item, idx) => `
         <text x="60" y="${240 + idx * 50}" class="price-item">
-          ${item.name}: ${formatPrice(item.price)}${formatPriceChange(item.change)}
+          ${escapeSvgText(item.name)}: ${formatPrice(item.price)}${formatPriceChange(item.change)}
         </text>
       `,
       )
       .join("");
 
     return createSvgWrapper(`
-      <text x="60" y="100" class="title">${category.name} Prices</text>
+      <text x="60" y="100" class="title">${escapeSvgText(category.name)} Prices</text>
       <text x="60" y="160" class="subtitle">Tracking Monthly Changes in the US</text>
       ${pricesList}
       ${createFooter("category")}
@@ -147,17 +162,19 @@ async function generateCategoryImage(category) {
   } catch (error) {
     console.error("Error in generateCategoryImage:", error);
     return createErrorSvg(
-      `Unable to load ${category.name} prices: ${error.message}`,
+      `Unable to load ${category.name} prices: ${errorMessage(error)}`,
     );
   }
 }
 
-async function generateSparkline(history) {
+async function generateSparkline(history: HistoryEntry[]) {
   if (!history?.length) return "";
-  const validPrices = history.filter((d) => !isNaN(Number(d?.current)));
+  const validPrices = history.filter(
+    (d) => Number.isFinite(Number(d.national)) && Number(d.national) > 0,
+  );
   if (!validPrices.length) return "";
 
-  const values = validPrices.map((d) => Number(d.current));
+  const values = validPrices.map((d) => Number(d.national));
   const minPrice = Math.min(...values);
   const maxPrice = Math.max(...values);
   const width = 300;
@@ -165,10 +182,12 @@ async function generateSparkline(history) {
 
   const points = validPrices
     .map((point, index) => {
-      const x = (index / (validPrices.length - 1)) * width;
+      const x = (index / Math.max(validPrices.length - 1, 1)) * width;
       const y =
         height -
-        ((Number(point.current) - minPrice) / (maxPrice - minPrice)) * height;
+        (maxPrice === minPrice
+          ? height / 2
+          : ((Number(point.national) - minPrice) / (maxPrice - minPrice)) * height);
       return `${x},${y}`;
     })
     .join(" ");
@@ -181,7 +200,7 @@ async function generateSparkline(history) {
   `;
 }
 
-async function generateItemImage(item, categoryName, itemData) {
+async function generateItemImage(item: Good, itemData: ItemData) {
   try {
     const currentPrice = itemData?.currentPrices?.national;
     if (!currentPrice?.current || isNaN(Number(currentPrice.current))) {
@@ -191,7 +210,7 @@ async function generateItemImage(item, categoryName, itemData) {
     const priceValue = Number(currentPrice.current);
     const percentChange = Number(currentPrice.percentChange || 0);
     const sparklineGroup = await generateSparkline(
-      itemData?.history?.national?.slice(-12),
+      itemData.history.slice(-12),
     );
     const changeColor = percentChange > 0 ? "#ef4444" : "#22c55e";
     const dateString = new Date().toLocaleString("en-US", {
@@ -201,11 +220,11 @@ async function generateItemImage(item, categoryName, itemData) {
 
     return createSvgWrapper(
       `
-      <text x="60" y="120" class="title">${item.name}</text>
+      <text x="60" y="120" class="title">${escapeSvgText(item.name)}</text>
       <text x="60" y="180" class="subtitle">National Average Price (BLS)</text>
 
       <text x="60" y="320" class="price">${formatPrice(priceValue)}</text>
-      <text x="60" y="370" class="unit">per ${item.unit}</text>
+      <text x="60" y="370" class="unit">per ${escapeSvgText(item.unit)}</text>
 
       <text x="60" y="440" class="change" fill="${changeColor}">
         Change: ${formatPriceChange(percentChange, false)}
@@ -220,14 +239,14 @@ async function generateItemImage(item, categoryName, itemData) {
   } catch (error) {
     console.error(`Error in generateItemImage for ${item.name}:`, error);
     return createErrorSvg(
-      `Unable to load ${item.name} price data: ${error.message}`,
+      `Unable to load ${item.name} price data: ${errorMessage(error)}`,
     );
   }
 }
 
 function createErrorSvg(message = "Data temporarily unavailable") {
   return createSvgWrapper(`
-    <text x="60" y="300" class="message">${message}</text>
+    <text x="60" y="300" class="message">${escapeSvgText(message)}</text>
   `);
 }
 
@@ -245,7 +264,7 @@ export async function getStaticPaths() {
   return paths;
 }
 
-export const GET: APIRoute = async ({ params }: Props) => {
+export const GET: APIRoute = async ({ params }) => {
   try {
     const { type, slug } = params;
     if (!type || !slug) throw new Error("Missing required parameters");
@@ -262,20 +281,19 @@ export const GET: APIRoute = async ({ params }: Props) => {
       if (!category) throw new Error("Category not found");
       svg = await generateCategoryImage(category);
     } else if (type === "items") {
-      let foundItem, categoryName;
+      let foundItem: Good | undefined;
       for (const category of Object.values(goodsConfig.categories)) {
         const item = Object.values(category.items).find(
           (item) => item.dataKey === slug,
         );
         if (item) {
           foundItem = item;
-          categoryName = category.name;
           break;
         }
       }
       if (!foundItem) throw new Error("Item not found");
       const itemData = await processItemData(foundItem.dataKey);
-      svg = await generateItemImage(foundItem, categoryName, itemData);
+      svg = await generateItemImage(foundItem, itemData);
     } else {
       throw new Error("Invalid type");
     }

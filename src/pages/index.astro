@@ -27,7 +27,7 @@ const description = "Tracking the price of goods normal people consume over time
       </p>
     </div>
 
-    {Object.entries(goodsConfig.categories).map(([key, category]) => (
+    {Object.values(goodsConfig.categories).map((category) => (
       <CategoryRow
         category={category.name}
         items={category.items}

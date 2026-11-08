@@ -1,0 +1,5 @@
+packageExtensions:
+  # astro2tsx's WASM bridge requires the matching stable emnapi runtime.
+  '@astrojs/astro2tsx@0.1.3':
+    dependencies:
+      '@emnapi/runtime': 1.11.3

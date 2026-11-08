@@ -2,7 +2,7 @@
 
 /**
  * Fetches the goods configuration data
- * @returns {Promise<Object>} The goods configuration
+ * @returns {Promise<import('./types').GoodsConfig>} The goods configuration
  */
 export async function fetchGoodsConfig() {
   try {
