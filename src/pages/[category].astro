@@ -8,13 +8,12 @@ import Breadcrumb from "../components/Breadcrumb.astro";
 // Generate all possible category routes
 export async function getStaticPaths() {
   const goodsConfig = await fetchGoodsConfig();
-  return Object.entries(goodsConfig.categories).map(([key, category]) => ({
+  return Object.values(goodsConfig.categories).map((category) => ({
     params: { category: slugify(category.name) },
     props: { categoryData: category }
   }));
 }
 
-const { category } = Astro.params;
 const { categoryData } = Astro.props;
 
 const title = `${categoryData.name} Average Monthly Prices in the US`;
@@ -81,7 +80,7 @@ const breadcrumbData = {
   description={description}
   ogImage={{
     type: 'categories',
-    slug: category
+    slug: slugify(categoryData.name)
   }}
 >
   <!-- Add structured data to head -->
@@ -112,7 +111,7 @@ const breadcrumbData = {
     />
 
     <div class="mt-12 space-y-12">
-      {Object.entries(categoryData.items).map(([key, item]) => (
+      {Object.values(categoryData.items).map((item) => (
         <div
           id={item.name.toLowerCase()}
           class="bg-white rounded-lg shadow p-6"

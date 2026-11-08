@@ -14,4 +14,5 @@ export default defineConfig({
   },
   site: "https://www.priceofgoods.com",
   output: "static",
+  compressHTML: true,
 });

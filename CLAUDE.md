@@ -3,7 +3,9 @@
 ## Build & Development Commands
 ```bash
 pnpm run dev      # Start local development server
+pnpm run check    # Check Astro and TypeScript diagnostics
 pnpm run build    # Build for production
+pnpm run test:build # Verify generated social previews after building
 pnpm run preview  # Preview production build
 pnpm run astro    # Run Astro CLI commands
 ```

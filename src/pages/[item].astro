@@ -1,10 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { marked } from "marked";
-import remarkGfm from "remark-gfm";
 
 import { fetchGoodsConfig } from "../lib/fetchUtils";
-import { processItemData, regions } from "../lib/dataUtils";
+import { processItemData } from "../lib/dataUtils";
 import { slugify } from "../lib/stringUtilities";
 import { analyzeItemPrices } from "../lib/priceanalysis";
 import ItemDetailPage from "../components/react/ItemDetailPage";
@@ -14,9 +13,6 @@ import Breadcrumb from "../components/Breadcrumb.astro";
 marked.setOptions({
     gfm: true,
     breaks: true,
-    headerIds: true,
-    mangle: false,
-    smartLists: true,
 });
 
 // Generate all possible item routes
@@ -24,7 +20,7 @@ export async function getStaticPaths() {
     const goodsConfig = await fetchGoodsConfig();
 
     const paths = await Promise.all(
-        Object.entries(goodsConfig.categories).flatMap(([categoryKey, category]) =>
+        Object.values(goodsConfig.categories).flatMap((category) =>
             Object.values(category.items).map(async (item) => {
                 const itemData = await processItemData(item.dataKey);
                 return {
@@ -44,7 +40,6 @@ export async function getStaticPaths() {
     return paths;
 }
 
-const { item } = Astro.params;
 const { itemInfo, itemData, categoryInfo } = Astro.props;
 
 // Get the latest data date from history
@@ -194,7 +189,7 @@ const breadcrumbData = {
                                 Citations
                             </h2>
                             <ol class="list-decimal list-outside ml-5 text-sm text-gray-700 space-y-4">
-                                {response.citations.map((citation, index) => {
+                                {response.citations.map((citation) => {
                                     // Handle different citation formats
                                     let url = "";
                                     let title = "";
@@ -218,7 +213,6 @@ const breadcrumbData = {
 
                                     return (
                                         <li
-                                            key={index}
                                             class="pb-3 mb-3 border-b border-gray-100 last:border-0 last:mb-0"
                                         >
                                             {url ? (

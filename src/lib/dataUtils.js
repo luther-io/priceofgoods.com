@@ -2,7 +2,6 @@
 import {
   fetchLatestItemData,
   fetchItemHistory,
-  fetchGoodsConfig,
 } from "./fetchUtils";
 
 const regions = {
@@ -21,6 +20,10 @@ const DEFAULT_PRICE_DATA = {
   percentChange: null,
 };
 
+/**
+ * @param {string} itemKey
+ * @returns {Promise<import('./types').ItemData>}
+ */
 export async function processItemData(itemKey) {
   try {
     // ===============================
