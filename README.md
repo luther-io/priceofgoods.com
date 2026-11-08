@@ -31,7 +31,7 @@ Data is sourced from the [Bureau of Labor Statistics](https://www.bls.gov/) (BLS
 
 ## Technology Stack
 
-1. [Astro](https://astro.build) v5.7+ - Web framework
+1. [Astro](https://astro.build) v7.4+ - Web framework
 2. React 19 - UI components
 3. TailwindCSS v4 - Styling
 4. Recharts - Data visualization
@@ -45,7 +45,7 @@ Data is sourced from the [Bureau of Labor Statistics](https://www.bls.gov/) (BLS
 
 ### Prerequisites
 
-- Node.js (v18+)
+- Node.js 24 (see `.nvmrc`); use the same version for Cloudflare Pages builds
 - pnpm (v10+) - This project uses pnpm as its package manager
 
 ### Getting Started
@@ -60,15 +60,17 @@ Data is sourced from the [Bureau of Labor Statistics](https://www.bls.gov/) (BLS
    ```
    pnpm run dev
    ```
-5. Visit `http://localhost:3000` in your browser
+5. Visit `http://localhost:4321` in your browser
 
 ### Build for Production
 
 ```
+pnpm run check
 pnpm run build
+pnpm run test:build
 ```
 
-
+The site is statically generated into `dist/`; no server adapter is required for Cloudflare Pages.
 
 ## Architecture
 
