@@ -8,8 +8,9 @@
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
-    "test": "node --test tests/dependencies.test.ts",
+    "test": "node --test tests/dependencies.test.ts tests/priceanalysis.test.ts",
     "test:build": "node --test tests/build.test.ts",
+    "review:analysis": "node --env-file-if-exists=.env scripts/review-analysis.ts",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"

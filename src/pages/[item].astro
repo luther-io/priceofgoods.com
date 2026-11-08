@@ -66,6 +66,7 @@ const response = await analyzeItemPrices(itemInfo);
 // console.log(response);
 const aiAnalysis = response.data ? marked.parse(response.data) : "";
 const analysisProvider = response.provider || "AI";
+const analysisModel = response.model ?? response.usage?.model;
 
 // Create JSON-LD structured data for the price dataset.
 const datasetStructuredData = {
@@ -176,6 +177,7 @@ const breadcrumbData = {
                     historyData={itemData.history}
                     aiAnalysis={aiAnalysis}
                     analysisProvider={analysisProvider}
+                    analysisModel={analysisModel}
                     client:load
                 />
             </div>
