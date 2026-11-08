@@ -13,8 +13,9 @@ import {
 import { regions } from "../../lib/dataUtils";
 import CustomTooltip from "./CustomTooltip";
 import PriceHistoryChart from "./PriceHistoryChart";
+import { analysisModelName } from "../../lib/analysisModel";
 
-const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis, analysisProvider }) => {
+const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis, analysisProvider, analysisModel }) => {
   const formatPrice = (price) => {
     return typeof price === "number" ? `$${price.toFixed(2)}` : "N/A";
   };
@@ -123,8 +124,8 @@ const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis, analysis
             </p>
           )}
         </div>
-        {analysisProvider && (
-          <div className="mt-8 pt-4 border-t border-gray-100 bg-gray-50 rounded-b-lg -mx-6 -mb-6 px-6 py-3 flex items-center justify-end">
+        {analysisProvider && analysisProvider !== "None" && (
+          <div className="mt-8 pt-4 border-t border-gray-100 bg-gray-50 rounded-b-lg -mx-6 -mb-6 px-6 py-3 flex flex-wrap items-center justify-end gap-y-1">
             <span className="text-xs text-gray-400">Analysis powered by</span>
             {analysisProvider === "Claude" ? (
               <span className="ml-3 font-semibold text-purple-600 flex items-center">
@@ -151,6 +152,11 @@ const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis, analysis
                   <circle cx="14.5" cy="11.5" r="2.5" fill="#2563EB"/>
                 </svg>
                 {analysisProvider}
+              </span>
+            )}
+            {(analysisProvider === "Claude" || analysisModel) && (
+              <span className="ml-2 text-xs text-gray-500" title={analysisModel}>
+                · {analysisModelName(analysisModel)}
               </span>
             )}
           </div>

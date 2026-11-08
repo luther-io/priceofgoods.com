@@ -45,4 +45,15 @@ export interface PriceAnalysis {
   citations: (string | Citation)[];
   timestamp: number;
   provider: string;
+  model?: string;
+  usage?: AnalysisUsage;
+}
+
+export interface AnalysisUsage {
+  model: string;
+  input_tokens: number;
+  output_tokens: number;
+  cache_creation_input_tokens: number;
+  cache_read_input_tokens: number;
+  web_search_requests: number;
 }
