@@ -29,7 +29,7 @@
     "marked": "^18.0.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "recharts": "^2.15.4",
+    "recharts": "^3.0.0",
     "remark-gfm": "^4.0.1",
     "sharp": "^0.35.5",
     "tailwindcss": "^4.3.5",
