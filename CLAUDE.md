@@ -4,6 +4,7 @@
 ```bash
 pnpm run dev      # Start local development server
 pnpm run check    # Check Astro and TypeScript diagnostics
+pnpm test         # Test dependency and SDK compatibility without live AI calls
 pnpm run build    # Build for production
 pnpm run test:build # Verify generated social previews after building
 pnpm run preview  # Preview production build
